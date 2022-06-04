@@ -1,0 +1,153 @@
+html,
+body {
+  height: 100vh;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #e4e5e8;
+}
+
+.container-fluid {
+  height: 100%;
+}
+
+.SEDisplay {
+  padding: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.mat-tab-header {
+  background-color: #ffffff;
+}
+
+.card {
+  border-radius: 10px;
+  border: 1px solid #b1b1b1;
+}
+
+.card-header {
+  height: 50px;
+}
+
+.card-body {
+  padding: 1px;
+}
+
+.card-footer {
+  padding: 1px;
+  padding-bottom: 5px;
+  border-top: none;
+}
+
+// .col .card {
+//   margin-left: 2px;
+//   margin-right: 2px;
+// }
+
+.col,
+.col-md-auto {
+  padding: 0px;
+}
+
+.menu {
+  width: 50px;
+  background-color: #3b3b3b;
+  height: 100vh;
+}
+
+img {
+  width: 40px;
+}
+
+.list {
+  line-height: 50px;
+  height: 50px;
+
+  text-align: center;
+}
+
+.f-list {
+  border-bottom: 1px solid #000000;
+}
+
+.list a,
+.list i {
+  line-height: 1.5;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+a {
+  font-size: 18px;
+  color: #b1b1b1;
+  text-decoration: none;
+  border: 2px solid #b1b1b1;
+  border-radius: 5px;
+}
+
+a:hover {
+  color: black;
+  text-decoration: none;
+  border: 2px solid black;
+}
+
+.select a {
+  color: #0d6efd;
+  border: 2px solid #0d6efd;
+}
+
+.select .list {
+  background-color: #000000;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-header-cell,
+td.mat-cell {
+  padding-left: 8px !important;
+  padding-right:8px !important;
+}
+
+// th.mat-cell:first-of-type,
+// td.mat-cell:first-of-type{
+//   padding-left: 8px !important;
+// }
+
+.num {
+  font-weight: bold;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+  font-size: 11px;
+  // background-color: #ffffff;
+}
+
+::ng-deep.mat-tab-label.mat-tab-label-active:not(.mat-tab-disabled),
+::ng-deep.mat-tab-label.mat-tab-label-active.cdk-keyboard-focused:not(.mat-tab-disabled) {
+  color: #0d6efd !important;
+  font-weight: bold !important;
+}
+
+.mat-paginator {
+  background-color: #f7f7f7 !important;
+}
+
+.highlightTableColor {
+  background-color: #d9edf7;
+}

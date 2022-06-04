@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-auto">
+      <div class="menu">
+        <div class="list f-list">
+          <!-- <img src="/assets/robot.png" /> -->
+          <i
+            class="fa fa-android"
+            aria-hidden="true"
+            style="color: #ffffff; font-size: 32px"
+          ></i>
+        </div>
+        <div class=" {{ page == 'se' ? 'select' : '' }}">
+          <div class="list">
+            <a href="#se-med" (click)="selectPage('se')" class="pl-1 pr-1">
+              SE</a
+            >
+          </div>
+        </div>
+        <div class=" {{ page == 'el' ? 'select' : '' }}">
+          <div class="list">
+            <a href="#el-med" (click)="selectPage('el')" class="pl-1 pr-1">
+              EL</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col show">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

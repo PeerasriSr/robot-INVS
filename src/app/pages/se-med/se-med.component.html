@@ -1,0 +1,549 @@
+<mat-tab-group (selectedTabChange)="getTab($event)">
+  <mat-tab label="Out SE" (click)="(getOutSE)">
+    <div class="container-fluid SEDisplay">
+      <div class="row">
+        <div class="col pl-1 pr-1">
+          <div class="card">
+            <div class="card-header pt-0">
+              <div class="row pl-1 pr-1">
+                <div class="col">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Barcode</mat-label>
+                    <input
+                      matInput
+                      #swiperSE
+                      (keyup.enter)="sendBCode(swiperSE.value); swiperSE.value = ''"
+                    />
+
+                    <div style="font-size: 25px" matSuffix>
+                      <i class="fa fa-barcode" aria-hidden="true"></i>
+                    </div>
+                  </mat-form-field>
+                </div>
+
+                <div class="col right">
+                  <mat-form-field>
+                    <input matInput (keyup)="outSEFilter($event)" />
+                    <mat-placeholder>ค้นหา : </mat-placeholder>
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                mat-table
+                [dataSource]="dataOutSE"
+                #sortOutSE="matSort"
+                matSort
+                class=""
+                matSortActive="drugCode"
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    รหัสยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="packageRatio">
+                  <th mat-header-cell *matHeaderCellDef>แพ็ค</th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.packageRatio }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugLocation">
+                  <th mat-header-cell *matHeaderCellDef>ตำแหน่ง</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    {{ element.drugLocation }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวนคงเหลือ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right num">
+                    {{ element.amount }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="options">
+                  <th mat-header-cell *matHeaderCellDef>ขอยา</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm"
+                      (click)="sendDCode(element)"
+                    >
+                      <i class="fa fa-exchange" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayOutSE"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayOutSE"
+                  style="cursor: pointer"
+                  (click)="selectDrug(row)"
+                  [ngClass]="{
+                    highlightTableColor: selectedRowOutSE == row.indexrow
+                  }"
+                ></tr>
+              </table>
+            </div>
+            <div class="card-footer">
+              <mat-paginator
+                #paginatorOutSE="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+        <div class="col-5 pl-1 pr-1">
+          <div class="card">
+            <div class="card-header">
+              <div class="row pl-1 pr-1">
+                <div class="col">
+                  <label for="" class="h5"
+                    ><i class="fa fa-medkit" aria-hidden="true"></i>
+                    {{ focusDrug }}</label
+                  >
+                </div>
+                <div class="col-3 right pr-0">
+                  <label for="" class="h5">รวม : {{ focusAmount }}</label>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                mat-table
+                [dataSource]="dataLot"
+                #sortLot="matSort"
+                matSort
+                class=""
+                matSortActive="LOT_NO"
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="LOT_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    LOT_NO
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.LOT_NO }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="EXP_Date">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    EXP_Date
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.EXP_Date }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Quantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Quantity
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right num">
+                    {{ element.Quantity }}
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayLot"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayLot"></tr>
+              </table>
+            </div>
+            <div class="card-footer">
+              <mat-paginator
+                #paginatorLot="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="In SE">
+    <div class="container-fluid SEDisplay">
+      <div class="row">
+        <div class="col pl-1 pr-1">
+          <div class="card">
+            <div class="card-header pt-0">
+              <div class="row pl-1 pr-1">
+                <div class="col right">
+                  <mat-form-field>
+                    <input matInput (keyup)="inSEFilter($event)" />
+                    <mat-placeholder>ค้นหา : </mat-placeholder>
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                mat-table
+                [dataSource]="dataInSE"
+                #sortInSE="matSort"
+                matSort
+                class=""
+                matSortActive="drugCode"
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    รหัสยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="packageRatio">
+                  <th mat-header-cell *matHeaderCellDef>แพ็ค</th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.packageRatio }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Maximum">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวนสูงสุด
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.Maximum }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Quantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวนคงเหลือ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right num">
+                    {{ element.Quantity }}
+                  </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="options">
+                  <th mat-header-cell *matHeaderCellDef>options</th>
+                  <td mat-cell *matCellDef="let element" class="center">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm"
+                      (click)="sendDCode(element)"
+                    >
+                      <i class="fa fa-exchange" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </ng-container> -->
+                <tr mat-header-row *matHeaderRowDef="displayInSE"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayInSE"
+                  style="cursor: pointer"
+                ></tr>
+              </table>
+            </div>
+            <div class="card-footer">
+              <mat-paginator
+                #paginatorInSE="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+        <div class="col-5 pl-1 pr-1">
+          <!-- <div class="card">
+            <div class="card-header">
+              <div class="row pl-1 pr-1">
+                <div class="col">
+                  <label for="" class="h5"
+                    ><i class="fa fa-medkit" aria-hidden="true"></i>
+                    {{ focusDrug }}</label
+                  >
+                </div>
+                <div class="col-3 right pr-0">
+                  <label for="" class="h5">รวม : {{ focusAmount }}</label>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                mat-table
+                [dataSource]="dataLot"
+                #sortLot="matSort"
+                matSort
+                class=""
+                matSortActive="LOT_NO"
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="LOT_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    LOT_NO
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.LOT_NO }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="EXP_Date">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    EXP_Date
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.EXP_Date }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Quantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Quantity
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right num">
+                    {{ element.Quantity }}
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayLot"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayLot"></tr>
+              </table>
+            </div>
+            <div class="card-footer">
+              <mat-paginator
+                #paginatorLot="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Pre Pack">
+    <div class="container-fluid SEDisplay">
+      <div class="row">
+        <div class="col pl-1 pr-1">
+          <div class="card">
+            <div class="card-header pt-0">
+              <div class="row pl-1 pr-1">
+                <div class="col">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Barcode</mat-label>
+                    <input
+                      matInput
+                      #swiperPP
+                      (keyup.enter)="sendBCode(swiperPP.value); swiperPP.value = ''"
+                    />
+
+                    <div style="font-size: 25px" matSuffix>
+                      <i class="fa fa-barcode" aria-hidden="true"></i>
+                    </div>
+                  </mat-form-field>
+                </div>
+
+                <div class="col right">
+                  <mat-form-field>
+                    <input matInput (keyup)="prepackFilter($event)" />
+                    <mat-placeholder>ค้นหา : </mat-placeholder>
+                    <mat-icon matSuffix>search</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                mat-table
+                [dataSource]="dataPrePackStock"
+                #sortPrePackStock="matSort"
+                matSort
+                class=""
+                matSortActive="drugCode"
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    รหัสยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugCode }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="drugName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    ชื่อยา
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.drugName }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="packageRatio">
+                  <th mat-header-cell *matHeaderCellDef>แพ็ค</th>
+                  <td mat-cell *matCellDef="let element" class="right">
+                    {{ element.packageRatio }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Quantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    จำนวนคงเหลือ
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right num">
+                    {{ element.Quantity }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayPrePackStock"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayPrePackStock"
+                  style="cursor: pointer"
+                  (click)="selectPrePack(row)"
+                  [ngClass]="{
+                    highlightTableColor: selectedRowPPStock == row.indexrow
+                  }"
+                ></tr>
+              </table>
+            </div>
+            <div class="card-footer">
+              <mat-paginator
+                #paginatorOutSE="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+        <div class="col-5 pl-1 pr-1">
+          <div class="card">
+            <div class="card-header">
+              <div class="row pl-1 pr-1">
+                <div class="col">
+                  <label for="" class="h5"
+                    ><i class="fa fa-medkit" aria-hidden="true"></i>
+                    {{ focusDrug }}</label
+                  >
+                </div>
+                <div class="col-3 right pr-0">
+                  <label for="" class="h5">รวม : {{ focusAmount }}</label>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table
+                mat-table
+                [dataSource]="dataLot"
+                #sortLot="matSort"
+                matSort
+                class=""
+                matSortActive="LOT_NO"
+                matSortDirection="asc"
+              >
+                <ng-container matColumnDef="indexrow">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.indexrow }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="LOT_NO">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    LOT_NO
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.LOT_NO }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="EXP_Date">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    EXP_Date
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="">
+                    {{ element.EXP_Date }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Quantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Quantity
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="right num">
+                    {{ element.Quantity }}
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayLot"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayLot"></tr>
+              </table>
+            </div>
+            <div class="card-footer">
+              <mat-paginator
+                #paginatorLot="matPaginator"
+                style="display: flex; justify-content: center"
+                [length]="10"
+                [pageSize]="10"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
